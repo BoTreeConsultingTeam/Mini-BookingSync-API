@@ -31,5 +31,5 @@ Other validations:
 
 #### How to run the test suite
 
-`rspeec spec`
+`rspec spec`
 
