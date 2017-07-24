@@ -22,13 +22,14 @@ Other validations:
 - the reservation should be possible for at least one night / day stay
 
 
-* Setup the Application
+
+#### Setup the Application
 
 `bundle install`
 
 `rake db:setup`
 
-* How to run the test suite
+#### How to run the test suite
 
 `rspeec spec`
 
