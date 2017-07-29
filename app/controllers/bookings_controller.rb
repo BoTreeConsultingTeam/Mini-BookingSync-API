@@ -4,7 +4,11 @@ class BookingsController < ApplicationController
 
   # GET rentals/:rental_id/bookings
   def index
-    @bookings = Booking.all
+    if params[:rental_id].present?
+      @bookings = @rental.bookings.all
+    else
+      @bookings = Booking.all
+    end
 
     render json: @bookings
   end

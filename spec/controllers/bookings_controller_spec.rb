@@ -10,8 +10,8 @@ RSpec.describe BookingsController, type: :controller do
   end
 
   describe "GET #index" do
-    let!(:booking1) { create(:booking) }
-    let!(:booking2) { create(:booking, start_at: booking1.end_at + 1.day, end_at: booking1.end_at + 2.days) }
+    let!(:booking1) { create(:booking, rental: hotel) }
+    let!(:booking2) { create(:booking, start_at: booking1.end_at + 1.day, end_at: booking1.end_at + 2.days, rental: hotel) }
 
     it "returns all bookings of given rental" do
       get :index, params: { rental_id: hotel.to_param }
