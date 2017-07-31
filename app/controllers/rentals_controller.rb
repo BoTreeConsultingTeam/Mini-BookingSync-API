@@ -3,8 +3,11 @@ class RentalsController < ApplicationController
 
   # GET /rentals
   def index
-    @rentals = Rental.all
-
+    if params[:start_at].present? && params[:end_at].present?
+      @rentals = Rental.available(parse_date(params[:start_at]),parse_date(params[:end_at]))
+    else
+      @rentals = Rental.all
+    end
     render json: @rentals
   end
 
@@ -47,5 +50,9 @@ class RentalsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def rental_params
       params.require(:rental).permit(:name, :daily_rate)
+    end
+
+    def parse_date(date)
+      DateTime.strptime(date, '%m/%d/%g').to_date
     end
 end
