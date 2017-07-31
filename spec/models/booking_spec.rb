@@ -44,7 +44,7 @@ RSpec.describe Booking, type: :model do
     let!(:booking) { create(:booking) }
 
     it 'should not save record' do
-      another_booking = build(:booking, start_at: 1.day.ago, end_at: Time.zone.now)
+      another_booking = build(:booking, start_at: Date.today, end_at: Date.tomorrow)
       another_booking.save
 
       expect(another_booking).not_to be_persisted

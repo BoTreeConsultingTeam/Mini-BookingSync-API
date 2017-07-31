@@ -13,10 +13,11 @@ class Booking < ApplicationRecord
   end
 
   def overlaps?
-    self.class.where('(start_at BETWEEN :start_at AND :end_at) OR (end_at BETWEEN :start_at AND :end_at)',
-                    start_at: start_at, end_at: end_at)
-              .where.not(id: id)
-              .count > 0
+    self.class
+        .joins(:rental)
+        .where('(start_at BETWEEN :start_at AND :end_at) OR (end_at BETWEEN :start_at AND :end_at)', start_at: start_at, end_at: end_at)
+        .where.not(rentals: { id: rental })
+        .count > 0
   end
 
   private
