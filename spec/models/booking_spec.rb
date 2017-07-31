@@ -22,20 +22,18 @@ RSpec.describe Booking, type: :model do
     let!(:booking) { create(:booking) }
 
     it 'returns false when given date range overlaps' do
-      another_booking = build(:booking)
+      another_booking = build(:booking, rental_id: booking.rental.id)
       expect(another_booking).to be_overlaps
 
-      another_booking = build(:booking, start_at: booking.end_at, end_at: booking.end_at + 2.days)
+      another_booking = build(:booking, start_at: booking.end_at, end_at: booking.end_at + 2.days, rental_id: booking.rental.id)
       expect(another_booking).to be_overlaps
 
-      another_booking = build(:booking, start_at: booking.start_at - 2.days, end_at: booking.start_at)
+      another_booking = build(:booking, start_at: booking.start_at - 2.days, end_at: booking.start_at, rental_id: booking.rental.id)
       expect(another_booking).to be_overlaps
     end
 
     it 'returns true when given date range does not overlap' do
-      expect(booking).not_to be_overlaps, 'Should exclude self from the comparision'
-
-      another_booking = build(:booking, start_at: booking.end_at + 2.days, end_at: booking.end_at + 3.days)
+      another_booking = build(:booking, start_at: booking.end_at + 2.days, end_at: booking.end_at + 3.days, rental_id: booking.rental.id)
       expect(another_booking).not_to be_overlaps
     end
   end
@@ -43,12 +41,19 @@ RSpec.describe Booking, type: :model do
   describe 'when booking date overlaps other bookings' do
     let!(:booking) { create(:booking) }
 
-    it 'should not save record' do
-      another_booking = build(:booking, start_at: Date.today, end_at: Date.tomorrow)
+    it 'should not save record for same rental' do
+      another_booking = build(:booking, start_at: Date.today, end_at: Date.tomorrow, rental_id: booking.rental.id)
       another_booking.save
 
       expect(another_booking).not_to be_persisted
       expect(another_booking.errors.full_messages).to include 'The Rental is already booked for given period'
+    end
+
+    it 'should save record for other rental for same date' do
+      another_booking = build(:vacation_villa)
+      another_booking.save
+
+      expect(another_booking).to be_persisted
     end
   end
 end

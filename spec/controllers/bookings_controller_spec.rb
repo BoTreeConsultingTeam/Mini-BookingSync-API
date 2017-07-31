@@ -59,7 +59,7 @@ RSpec.describe BookingsController, type: :controller do
       it "renders a JSON response with errors for the new booking" do
         params = { start_at: booking.end_at, end_at: booking.end_at + 2.days, client_email: 'test@example.com' }
 
-        post :create, params: { rental_id: hotel.to_param, booking: params }
+        post :create, params: { rental_id: booking.rental.to_param, booking: params }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
         expect(json_response['errors']).to include 'The Rental is already booked for given period'
